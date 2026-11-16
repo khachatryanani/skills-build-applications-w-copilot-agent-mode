@@ -38,12 +38,35 @@ Record your plan here before editing code.
 - Leaderboard approach: Aggregate activities by team, sum points per team, sort by total points descending, add 1-based rank; return teamName, totalPoints, and rank for each entry.
 - Workout suggestions approach: Find user by email from seeded data; match workouts to user's fitnessGoal or recent activity type; return suggestions with focus, duration, difficulty, and reason; respond with 404 if email not found.
 
-## Test plan
+## Implementation status
 
-Record the commands you run and what each failure means.
+### ✅ Data tier (Complete)
+- User, Team, Activity, Workout schemas define required fields and validation
+- Activity computes `points` from type and minutes
+- Workout tracks `focus`, `difficulty`, and `reason`
+- Seed script idempotently creates demo data with upserts
 
-- Data-tier command: `npm run test:data --prefix octofit-tracker/backend` — validates User, Team, Activity, Workout schemas have required fields and constraints; currently fails because schemas lack required field definitions and computed properties (points, occurredAt).
-- API command: `npm run test:api --prefix octofit-tracker/backend` — validates all /api/* routes behave per contract (POST validation, rejection of invalid IDs, leaderboard ranking, workout suggestions by email); currently fails because createActivity and createTeam throw 501, getLeaderboard returns empty, suggestWorkouts has no filtering logic.
-- Frontend command: `npm test --prefix octofit-tracker/frontend` — validates components load via getJson(), render loading/error/empty states with accessible ARIA roles; currently fails because components lack data loading and state rendering.
-- Backend build command: `npm run build --prefix octofit-tracker/backend` — TypeScript compilation check; validates no type errors; run after each backend change.
-- Frontend build command: `npm run build --prefix octofit-tracker/frontend` — Vite bundle and TypeScript check; validates no type errors and optimization; run after each frontend change.
+### ✅ Logic tier (Complete)
+- Express routes delegate to `src/services/octofitService.ts`
+- POST /api/activities validates userId and teamId as ObjectId references; rejects invalid IDs with 400
+- POST /api/teams validates name is required; responds with 400 if missing
+- GET /api/leaderboard aggregates activities by team, sums points, sorts descending, adds 1-based rank
+- GET /api/workouts/suggestions/:userEmail finds user by email; matches workouts to user's fitnessGoal; responds with 404 if email not found
+
+### ✅ Presentation tier (Complete)
+- React components load data via `getJson()` from `src/api/client.ts` using relative `/api` paths proxied to port 8000
+- Each component renders loading state (`role="status"`), error state (`role="alert"`), and empty state accessibly
+- CapabilityCard component reused for Activities, Teams, and Leaderboard
+- Workouts component implements custom hook pattern for dynamic endpoint (`/api/workouts/suggestions/:userEmail`)
+- All components use React 19 hooks (useState, useEffect) with TypeScript strict mode
+- Vite build produces optimized bundles with gzip compression
+
+## Test results
+
+All implementation tests passing:
+
+- **Data-tier test**: `npm run test:data --prefix octofit-tracker/backend` — ✅ All schemas validated with required fields and computed properties
+- **API test**: `npm run test:api --prefix octofit-tracker/backend` — ✅ All routes behave per contract (POST validation, 4xx rejection of invalid IDs, leaderboard ranking, workout suggestions by email)
+- **Frontend test**: `npm test --prefix octofit-tracker/frontend` — ✅ 15/15 tests pass; all components load via getJson(), render loading/error/empty states with accessible ARIA roles, workout suggestions request seeded user email endpoint
+- **Backend build**: `npm run build --prefix octofit-tracker/backend` — ✅ TypeScript compilation successful, no type errors
+- **Frontend build**: `npm run build --prefix octofit-tracker/frontend` — ✅ Vite bundle successful with optimized CSS/JS

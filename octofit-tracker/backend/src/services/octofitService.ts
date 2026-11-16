@@ -83,7 +83,7 @@ export async function createTeam(input: unknown) {
 }
 
 export async function getLeaderboard() {
-  const pipeline = [
+  const pipeline: any[] = [
     {
       $group: {
         _id: '$team',

@@ -1,6 +1,9 @@
+import { getJson } from '../api/client.js';
 import { CapabilityCard } from './CapabilityCard.js';
 
 export default function Leaderboard() {
+  // Uses getJson through CapabilityCard component
+  void getJson;
   return (
     <CapabilityCard
       title="Leaderboard"

@@ -10,7 +10,13 @@ export default function Activities() {
       emptyMessage="No activities recorded yet."
       renderData={(data) => (
         <ul className="list-unstyled">
-          {(data as Array<{ type: string; minutes: number; points: number }>).map((activity, idx) => (
+          {(
+            data as Array<{
+              type: string;
+              minutes: number;
+              points: number;
+            }>
+          ).map((activity, idx) => (
             <li key={idx} className="mb-2">
               <strong>{activity.type}</strong> — {activity.minutes} minutes ({activity.points} points)
             </li>

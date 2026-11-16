@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getJson } from '../api/client.js';
 
-type Props = { title: string; description: string; apiPath: string; dataKey: string; emptyMessage: string; renderData: (data: unknown[]) => React.ReactNode };
+type Props = {
+  title: string;
+  description: string;
+  apiPath: string;
+  dataKey: string;
+  emptyMessage: string;
+  renderData: (data: unknown[]) => React.ReactNode;
+};
 
 export function CapabilityCard({ title, description, apiPath, dataKey, emptyMessage, renderData }: Props) {
   const [data, setData] = useState<unknown[] | null>(null);
@@ -16,7 +23,7 @@ export function CapabilityCard({ title, description, apiPath, dataKey, emptyMess
         setData((response[dataKey] as unknown[]) || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setError('Unable to load data. Please try again later.');
         setLoading(false);
       });
@@ -27,8 +34,16 @@ export function CapabilityCard({ title, description, apiPath, dataKey, emptyMess
       <div className="card-body">
         <h2 className="h4">{title}</h2>
         <p>{description}</p>
-        {loading && <p role="status">Loading...</p>}
-        {error && <div role="alert">{error}</div>}
+        {loading && (
+          <p role="status" aria-live="polite">
+            Loading...
+          </p>
+        )}
+        {error && (
+          <div role="alert" aria-live="assertive">
+            {error}
+          </div>
+        )}
         {!loading && !error && (!data || data.length === 0) && <p>{emptyMessage}</p>}
         {!loading && !error && data && data.length > 0 && renderData(data)}
       </div>

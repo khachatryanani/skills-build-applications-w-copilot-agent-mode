@@ -10,7 +10,12 @@ export default function Teams() {
       emptyMessage="No teams created yet."
       renderData={(data) => (
         <ul className="list-unstyled">
-          {(data as Array<{ name: string; members: string[] }>).map((team, idx) => (
+          {(
+            data as Array<{
+              name: string;
+              members: string[];
+            }>
+          ).map((team, idx) => (
             <li key={idx} className="mb-2">
               <strong>{team.name}</strong> — {team.members.join(', ')}
             </li>

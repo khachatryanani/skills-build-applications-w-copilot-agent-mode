@@ -18,7 +18,13 @@ export default function Leaderboard() {
             </tr>
           </thead>
           <tbody>
-            {(data as Array<{ rank: number; teamName: string; totalPoints: number }>).map((entry) => (
+            {(
+              data as Array<{
+                rank: number;
+                teamName: string;
+                totalPoints: number;
+              }>
+            ).map((entry) => (
               <tr key={entry.rank}>
                 <td>{entry.rank}</td>
                 <td>{entry.teamName}</td>

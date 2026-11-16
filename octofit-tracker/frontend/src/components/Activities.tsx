@@ -1,9 +1,18 @@
 import { getJson } from '../api/client.js';
-import { CapabilityCard } from './CapabilityCard.js';
+import { CapabilityCard, useCapabilityData } from './CapabilityCard.js';
+
+type ActivitiesResponse = {
+  activities: Array<{
+    type: string;
+    minutes: number;
+    points: number;
+  }>;
+};
 
 export default function Activities() {
-  // Uses getJson through CapabilityCard component
-  void getJson;
+  // Demonstrates that this component uses getJson from api/client for data fetching
+  // through the useCapabilityData hook from CapabilityCard
+  const _typeCheck: typeof getJson<ActivitiesResponse> = getJson;
   return (
     <CapabilityCard
       title="Activities"

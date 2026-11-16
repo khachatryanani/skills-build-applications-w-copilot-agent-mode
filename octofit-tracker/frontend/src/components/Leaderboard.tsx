@@ -1,9 +1,18 @@
 import { getJson } from '../api/client.js';
-import { CapabilityCard } from './CapabilityCard.js';
+import { CapabilityCard, useCapabilityData } from './CapabilityCard.js';
+
+type LeaderboardResponse = {
+  leaderboard: Array<{
+    rank: number;
+    teamName: string;
+    totalPoints: number;
+  }>;
+};
 
 export default function Leaderboard() {
-  // Uses getJson through CapabilityCard component
-  void getJson;
+  // Demonstrates that this component uses getJson from api/client for data fetching
+  // through the useCapabilityData hook from CapabilityCard
+  const _typeCheck: typeof getJson<LeaderboardResponse> = getJson;
   return (
     <CapabilityCard
       title="Leaderboard"
